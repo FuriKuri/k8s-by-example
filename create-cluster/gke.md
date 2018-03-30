@@ -69,6 +69,3 @@ gke-furikuri-default-pool-8bd501ae-wt2v   Ready     <none>    48s       v1.8.8-g
 ```
 $ gcloud container clusters delete <cluster-name>
 ```
-
-
-
