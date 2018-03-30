@@ -1,6 +1,9 @@
 # Summary
 
 * [Introduction](README.md)
-* [First Chapter](chapter1.md)
-* Create Cluster
+
+## Create Cluster
+
+* [GKE \(Google Cloud Platform\)\)](create-cluster/gke.md)
+* [kops \(AWS\)](create-cluster/aws.md)
 
