@@ -2,6 +2,10 @@
 
 * [Introduction](README.md)
 
+## Tools
+
+* [kubectl](tools/kubectl.md)
+
 ## Create Cluster
 
 * [GKE \(Google Cloud Platform\)\)](create-cluster/gke.md)
