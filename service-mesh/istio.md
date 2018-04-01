@@ -97,3 +97,72 @@ $ kubectl label namespace istio-demo istio-injection=enabled
 ```
 
 ## Tasks
+
+### Deploy demo app
+
+```
+$ kubectl create -n istio-demo -f https://raw.githubusercontent.com/FuriKuri/demo/master/deploy.yaml
+```
+
+### Egress traffic
+
+```
+cat <<EOF | istioctl create -f -
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  namespace: istio-demo
+  name: httpbin-timeout-rule
+spec:
+  destination:
+    service: httpbin.org
+  http_req_timeout:
+    simple_timeout:
+      timeout: 3s
+EOF
+```
+
+```
+$ http http://127.0.0.1:8001/api/v1/namespaces/istio-demo/services/http:client:80/proxy/http/httpbin.org/delay/0
+HTTP/1.1 200 OK
+Content-Length: 846
+Content-Type: text/plain; charset=utf-8
+Date: Sat, 31 Mar 2018 17:01:35 GMT
+Server: envoy
+X-Envoy-Decorator-Operation: default-route
+X-Envoy-Upstream-Service-Time: 187
+
+{
+    "args": {},
+    "data": "",
+    "files": {},
+    "form": {},
+    "headers": {
+        "Accept-Encoding": "gzip",
+        "Connection": "close",
+        "Host": "httpbin.org",
+        "User-Agent": "Go-http-client/1.1",
+        "X-B3-Sampled": "1",
+        "X-B3-Spanid": "e6b2268a1a529fe4",
+        "X-B3-Traceid": "e6b2268a1a529fe4",
+        "X-Envoy-Decorator-Operation": "httpbin-timeout-rule",
+        "X-Envoy-Expected-Rq-Timeout-Ms": "3000",
+        "X-Istio-Attributes": "CkoKCnNvdXJjZS51aWQSPBI6a3ViZXJuZXRlczovL2NsaWVudC1kZXBsb3ltZW50LTU0NDc4YzhiOWMtOXZ2aDguaXN0aW8tZGVtbwpDCg1zb3VyY2UubGFiZWxzEjJKMAoNCgNhcHASBmNsaWVudAofChFwb2QtdGVtcGxhdGUtaGFzaBIKMTAwMzQ3NDY1NwofCglzb3VyY2UuaXASEjIQAAAAAAAAAAAAAP//ZGACBw==",
+        "X-Ot-Span-Context": "e6b2268a1a529fe4;e6b2268a1a529fe4;0000000000000000"
+    },
+    "origin": "35.157.82.188",
+    "url": "http://httpbin.org/delay/0"
+}
+
+$ http http://127.0.0.1:8001/api/v1/namespaces/istio-demo/services/http:client:80/proxy/http/httpbin.org/delay/4
+HTTP/1.1 200 OK
+Content-Length: 24
+Content-Type: text/plain; charset=utf-8
+Date: Sat, 31 Mar 2018 17:01:40 GMT
+Server: envoy
+X-Envoy-Decorator-Operation: default-route
+X-Envoy-Upstream-Service-Time: 3003
+
+upstream request timeout
+
+```
