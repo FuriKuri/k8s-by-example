@@ -71,3 +71,40 @@ The command `conduit inject` will add an additional container and an additional 
           privileged: false
 ```
 
+## Usage
+
+### Example request
+
+```
+$ kubectl proxy
+$ http http://127.0.0.1:8001/api/v1/namespaces/default/services/http:client:80/proxy/http/server/host
+```
+
+```
+$ LB_ADDRESS=$(kubectl get svc client -o jsonpath="{.status.loadBalancer.ingress[0].*}")
+$ http "http://$LB_ADDRESS/host"
+```
+
+### Dashboard
+
+```
+conduit dashboard
+```
+
+### CLI
+
+```
+$ conduit stat deployments
+NAME                        REQUEST_RATE   SUCCESS_RATE   P50_LATENCY   P99_LATENCY
+default/client-deployment         0.1rps        100.00%           0ms           0ms
+```
+
+```
+$ conduit tap deploy default/client-deployment
+req id=0:11 src=100.96.2.1:35447 dst=100.96.2.5:8080 :method=GET :authority=a89ab2a87364511e8950202637bdd010-2032770816.eu-central-1.elb.amazonaws.com :path=/host
+rsp id=0:11 src=100.96.2.1:35447 dst=100.96.2.5:8080 :status=200 latency=274µs
+end id=0:11 src=100.96.2.1:35447 dst=100.96.2.5:8080 duration=89µs response-length=34B
+req id=0:12 src=100.96.2.1:35449 dst=100.96.2.5:8080 :method=GET :authority=a89ab2a87364511e8950202637bdd010-2032770816.eu-central-1.elb.amazonaws.com :path=/host
+rsp id=0:12 src=100.96.2.1:35449 dst=100.96.2.5:8080 :status=200 latency=312µs
+end id=0:12 src=100.96.2.1:35449 dst=100.96.2.5:8080 duration=84µs response-length=34B
+```
