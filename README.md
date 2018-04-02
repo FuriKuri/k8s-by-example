@@ -1,3 +1,3 @@
-# My Awesome Book
+# My Kubernetes example collection
 
-This file file serves as your book's preface, a great place to describe your book's content and ideas.
+A place where I collect all kubernetes examples, which I used at work or in my free time.
