@@ -16,4 +16,4 @@
 * [Istio](service-mesh/istio.md)
 * [Linkerd](service-mesh/linkerd.md)
 * [Conduit](service-mesh/conduit.md)
-* [Envoy](service-mesh/envoy.md)
+* [Envoy / Ambassador](service-mesh/envoy.md)
